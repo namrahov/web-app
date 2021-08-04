@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/justinas/nosurf"
-	"github.com/namrahov/web-app/pkg/config"
-	"github.com/namrahov/web-app/pkg/models"
+	"github.com/namrahov/web-app/internal/config"
+	"github.com/namrahov/web-app/internal/models"
 	"html/template"
 	"log"
 	"net/http"
@@ -23,6 +23,9 @@ func NewTemplates(a *config.AppConfig) {
 
 // AddDefaultData adds data for all templates
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
+	td.Flash = app.Session.PopString(r.Context(), "flash")
+	td.Warning = app.Session.PopString(r.Context(), "warning")
+	td.Error = app.Session.PopString(r.Context(), "error")
 	td.CSRFToken = nosurf.Token(r)
 	return td
 }
